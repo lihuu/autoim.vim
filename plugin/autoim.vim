@@ -1,30 +1,16 @@
 """""""""""""""""""""""""""
 "AutoIM
 """""""""""""""""""""""""""
-let g:lv_restore_last_im = 0
-let s:is_abc_path = expand('<sfile>:p:h') . "/is_abc"
-let s:toggle_input_method_path = expand('<sfile>:p:h') . "/" . g:autoim_toggle_shortcut . ".scpt"
-let s:toggle_input_method_command = 'osascript ' . s:toggle_input_method_path
+let s:change_en_script_path = expand('<sfile>:p:h') . "/change_en.scpt"
+let s:change_en_command = 'osascript ' . s:change_en_script_path
+let s:change_ch_script_path = expand('<sfile>:p:h') . "/change_ch.scpt"
+let s:change_ch_command = 'osascript ' . s:change_ch_script_path
 
 function! AutoIM(event)
-	let is_abc = system(s:is_abc_path)!= ''
-
-	let need_switch_im = 0
 	if a:event == 'leave'
-		if !is_abc
-			let g:lv_restore_last_im = 1
-			let need_switch_im = 1
-		else
-			let g:lv_restore_last_im = 0
-		end
+		let tmp = system(s:change_en_command)
 	else " a:event == 'enter'
-		if is_abc && g:lv_restore_last_im
-			let need_switch_im = 1
-		end
-	end
-
-	if need_switch_im 
-		let tmp=system(s:toggle_input_method_command)
+		let tmp = system(s:change_ch_command)
 	end
 endfunction
 

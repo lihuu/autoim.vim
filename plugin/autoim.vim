@@ -1,18 +1,26 @@
 """""""""""""""""""""""""""
 "AutoIM
 """""""""""""""""""""""""""
-let s:change_en_script_path = expand('<sfile>:p:h') . "/change_en.scpt"
-let s:change_en_command = 'osascript ' . s:change_en_script_path
-let s:change_ch_script_path = expand('<sfile>:p:h') . "/change_ch.scpt"
-let s:change_ch_command = 'osascript ' . s:change_ch_script_path
+vim9script
 
-function! AutoIM(event)
-	if a:event == 'leave'
-		let tmp = system(s:change_en_command)
-	else " a:event == 'enter'
-		let tmp = system(s:change_ch_command)
-	end
-endfunction
+# Define path variables for AppleScript files
+const change_en_script_path = expand('<sfile>:p:h') .. "/change_en.scpt"
+const change_en_command = 'osascript ' .. change_en_script_path
+const change_ch_script_path = expand('<sfile>:p:h') .. "/change_ch.scpt"
+const change_ch_command = 'osascript ' .. change_ch_script_path
 
-autocmd InsertEnter * call AutoIM("enter")
-autocmd InsertLeave * call AutoIM("leave")
+# Function to switch input method based on event
+def AutoIM(event: string)
+  if event == 'leave'
+    system(change_en_command)
+  else # event == 'enter'
+    system(change_ch_command)
+  endif
+enddef
+
+# Set up autocmds for switching input method
+augroup AutoIM
+  autocmd!
+  autocmd InsertEnter * AutoIM("enter")
+  autocmd InsertLeave * AutoIM("leave")
+augroup END
